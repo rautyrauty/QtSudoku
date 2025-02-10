@@ -1,10 +1,17 @@
-QT      += widgets
+QT += widgets \
+	quick
 
-CONFIG  += c++17
+CONFIG += c++17
 
 SOURCES += \
-    main.cpp \
-    sudoku.cpp
+	main.cpp \
+	sudoku.cpp
 
 HEADERS += \
-    sudoku.h
+	sudoku.h
+
+DISTFILES += \
+	ui.qml
+
+RESOURCES += \
+	qml.qrc

@@ -17,96 +17,96 @@
 
 class CellBtn : public QPushButton
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    CellBtn(QWidget* parent);
+	CellBtn(QWidget* parent);
 
-    int GetDigit() const;
-    bool IsLocked() const;
-    void SetDigit(int digit);
-    void Lock();
-    void Open();
+	int GetDigit() const;
+	bool IsLocked() const;
+	void SetDigit(int digit);
+	void Lock();
+	void Open();
 
 private slots:
-    void ChangeDigit();
+	void ChangeDigit();
 
 private:
-    void mousePressEvent(QMouseEvent*) override;
-    void resizeEvent(QResizeEvent*) override;
-    void UpdateColor();
+	void mousePressEvent(QMouseEvent*) override;
+	void resizeEvent(QResizeEvent*) override;
+	void UpdateColor();
 
-    int _digit;
-    bool _is_open;
+	int _digit;
+	bool _is_open;
 };
 
 class Sudoku : public QWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    Sudoku(QWidget* parent);
+	Sudoku(QWidget* parent);
 
-    static bool IsSandboxMode();
+	static bool IsSandboxMode();
 public slots:
-    void Generate(int open_slots_count);
+	void Generate(int open_slots_count);
 private slots:
-    void Solve();
-    void Help();
-    void ClickedReturnBtn();
-    void Check();
+	void Solve();
+	void Help();
+	void ClickedReturnBtn();
+	void Check();
 
-    void Update();
+	void Update();
 signals:
-    void ReturnToMenu();
+	void ReturnToMenu();
 private:
-    std::pair<int,int> FindError();
+	std::pair<int,int> FindError();
 
-    void resizeEvent(QResizeEvent *event) override;
-    void paintEvent(QPaintEvent *) override;
+	void resizeEvent(QResizeEvent *event) override;
+	void paintEvent(QPaintEvent *) override;
 
-    QPushButton* _check;
-    QPushButton* _solve;
-    QPushButton* _return;
-    QPushButton* _help;
-    CellBtn* _cells[9][9];
+	QPushButton* _check;
+	QPushButton* _solve;
+	QPushButton* _return;
+	QPushButton* _help;
+	CellBtn* _cells[9][9];
 
-    QTimer* _timer;
-    uint16_t _seconds;
-    QLabel* _timer_lbl;
+	QTimer* _timer;
+	uint16_t _seconds;
+	QLabel* _timer_lbl;
 
-    static inline bool _sandbox_mode = false;
-    int _open_slots_count;
+	static inline bool _sandbox_mode = false;
+	int _open_slots_count;
 };
 
 class Menu : public QWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    Menu(QWidget* parent);
+	Menu(QWidget* parent);
 private:
-    QPushButton* _play;
-    QPushButton* _exit;
-    QLineEdit* _setting;
+	QPushButton* _play;
+	QPushButton* _exit;
+	QLineEdit* _setting;
 private slots:
-    void ClickedPlayBtn();
-    void ClickedExitBtn();
+	void ClickedPlayBtn();
+	void ClickedExitBtn();
 signals:
-    void Play(int setting);
-    void Close();
+	void Play(int setting);
+	void Close();
 };
 
 class SdkWindow : public QMainWindow
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    SdkWindow();
+	SdkWindow();
 private:
-    Menu* _m;
-    Sudoku* _sdk;
-    QStackedWidget* _main_widget;
+	Menu* _m;
+	Sudoku* _sdk;
+	QStackedWidget* _main_widget;
 private slots:
-    void gotoMenu();
-    void gotoSudoku(int setting);
-    void ClickedExitBtn();
+	void gotoMenu();
+	void gotoSudoku(int setting);
+	void ClickedExitBtn();
 signals:
-    void Close();
+	void Close();
 };
