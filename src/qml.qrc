@@ -1,0 +1,11 @@
+<RCC>
+	<qresource prefix="/">
+		<file>fonts/RussoOne-Regular.ttf</file>
+		<file>qml/MenuBtn.qml</file>
+		<file>qml/Sudoku.qml</file>
+		<file>qml/SudokuCell.qml</file>
+		<file>qml/main.qml</file>
+		<file>qml/SudokuPage.qml</file>
+		<file>qml/ConfettiCanvas.qml</file>
+	</qresource>
+</RCC>
