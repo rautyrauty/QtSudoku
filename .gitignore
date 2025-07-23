@@ -1,3 +1,5 @@
+*.autosave
+
 # Prerequisites
 *.d
 
