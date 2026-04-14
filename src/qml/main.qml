@@ -7,8 +7,8 @@ import Qt.labs.qmlmodels 1.0
 import SudokuModel 1.0
 
 ApplicationWindow {
-	width: 640
-	height: 480
+	width: 800
+	height: 800
 	visible: true
 	title: qsTr("QtSudoku")
 	id: root
