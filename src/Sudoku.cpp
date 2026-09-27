@@ -60,11 +60,7 @@ void Sudoku::generate(int open_slots_count)
 		row += 1;
 	}
 
-	static bool opened[9 * 9];
-	for (int i = 0; i < 9 * 9; i += 1)
-	{
-		opened[i] = false;
-	}
+	std::array<bool, 9 * 9> opened{};
 
 	std::random_device rd;
 	std::mt19937 gen(rd());
