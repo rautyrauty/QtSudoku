@@ -20,7 +20,7 @@ jobs:
   linux-tests:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -34,7 +34,7 @@ jobs:
   linux-appimage:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.QT_VERSION }}
@@ -61,16 +61,16 @@ jobs:
           wget -q $base/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
           chmod +x linuxdeploy*.AppImage
           ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
-          name: linux-appimage
           path: '*.AppImage'
+          archive: false
           if-no-files-found: error
 
   windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.QT_VERSION }}
@@ -90,10 +90,10 @@ jobs:
           Copy-Item LICENSE $name\
           windeployqt --release --no-translations --qmldir src\qml $name\qtsudoku.exe
           Compress-Archive -Path $name -DestinationPath "$name.zip"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
-          name: windows-zip
           path: '*.zip'
+          archive: false
           if-no-files-found: error
 
   release:
@@ -103,7 +103,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Check that the tag matches the project version
         run: |
           version=$(sed -n 's/^project(SudokuProject VERSION \([0-9.]*\).*/\1/p' CMakeLists.txt)
@@ -111,10 +111,11 @@ jobs:
             echo "::error::Tag $GITHUB_REF_NAME does not match project version $version in CMakeLists.txt"
             exit 1
           fi
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           path: dist
           merge-multiple: true
+          skip-decompress: true
       - name: Create release
         env:
           GH_TOKEN: ${{ github.token }}
