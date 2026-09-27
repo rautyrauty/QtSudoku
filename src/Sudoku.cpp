@@ -193,7 +193,7 @@ bool Sudoku::solve()
 				{
 					if (_cells[tmp_row][tmp_column].IsLocked())
 					{
-						sdk[row][column].RemoveFD(sdk[tmp_row][tmp_column].GetDigit());
+						sdk[row][column].RemoveFD(_cells[tmp_row][tmp_column].GetDigit());
 					}
 					tmp_column -= 1;
 					if (tmp_column < column / 3 * 3)
