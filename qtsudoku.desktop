@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=QtSudoku
+Comment=Sudoku puzzle game
+Exec=qtsudoku
+Icon=qtsudoku
+Categories=Game;LogicGame;

@@ -22,3 +22,21 @@ set_target_properties(SudokuApp PROPERTIES
 )
 
 target_compile_definitions(SudokuApp PRIVATE QT_QUICK_LIB)
+
+include(GNUInstallDirs)
+
+install(PROGRAMS $<TARGET_FILE:SudokuApp>
+   DESTINATION ${CMAKE_INSTALL_BINDIR}
+   RENAME qtsudoku
+)
+
+install(FILES qtsudoku.desktop
+   DESTINATION ${CMAKE_INSTALL_DATADIR}/applications
+)
+
+foreach(size 16 32 48 64 128 256 512)
+   install(FILES icons/${size}-apps-qtsudoku.png
+      DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/${size}x${size}/apps
+      RENAME qtsudoku.png
+   )
+endforeach()
