@@ -33,6 +33,12 @@ set(QRC_FILE src/qml.qrc)
 
 add_executable(SudokuApp src/main.cpp ${QRC_FILE})
 
+if(WIN32)
+   configure_file(src/qtsudoku.rc.in qtsudoku.rc @ONLY)
+   target_sources(SudokuApp PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/qtsudoku.rc)
+   set_target_properties(SudokuApp PROPERTIES WIN32_EXECUTABLE ON)
+endif()
+
 target_compile_definitions(SudokuApp PRIVATE $<$<CONFIG:Debug>:QT_QML_DEBUG>)
 target_link_libraries(SudokuApp PRIVATE sudoku_core)
 
