@@ -16,6 +16,10 @@ if(SUDOKU_SANITIZERS)
    add_compile_definitions(_GLIBCXX_ASSERTIONS)
 endif()
 
+if(MSVC)
+   add_compile_options(/permissive- /utf-8)
+endif()
+
 find_package(Qt6 REQUIRED COMPONENTS Quick)
 
 set(CMAKE_AUTOMOC ON)
