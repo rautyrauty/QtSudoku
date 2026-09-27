@@ -10,6 +10,7 @@ int main(int argc, char *argv[])
 	QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
 	QGuiApplication app(argc, argv);
+	QGuiApplication::setApplicationName(QStringLiteral("qtsudoku"));
 	QGuiApplication::setDesktopFileName(QStringLiteral("qtsudoku"));
 	QGuiApplication::setWindowIcon(QIcon(QStringLiteral(":/icons/256-apps-qtsudoku.png")));
 

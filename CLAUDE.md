@@ -49,7 +49,7 @@ Two-layer split: a C++ model exposed to a pure-QML frontend via `qmlRegisterType
 - Fonts: `RussoOne-Regular.ttf` is loaded via `FontLoader` in `main.qml` and referenced by `russoFontLoader.name`.
 
 **Persistence**
-- `Sudoku::check()` appends `"Won with N open cells"` to `base.txt` in the process CWD on victory. This is the only persistent state; the README flags replacing this flat file with a real leaderboard as a TODO.
+- `Sudoku::check()` appends `"Won with N open cells"` to `Sudoku::historyFilePath()` (`base.txt` under `QStandardPaths::AppDataLocation`, e.g. `~/.local/share/qtsudoku/`) on victory. This is the only persistent state; the README flags replacing this flat file with a real leaderboard as a TODO.
 
 ## Conventions
 

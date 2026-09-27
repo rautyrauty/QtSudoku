@@ -7,6 +7,7 @@
 #include <QIntValidator>
 #include <QTimer>
 #include <QFile>
+#include <QString>
 #include <QPoint>
 #include <QList>
 
@@ -29,6 +30,8 @@ public:
 	Q_INVOKABLE void setDigit(int x, int y, int digit);
 	int getDigit(int x, int y) const;
 	int isLocked(int x, int y) const;
+
+	static QString historyFilePath();
 
 private:
 	friend class SudokuBlockModel;

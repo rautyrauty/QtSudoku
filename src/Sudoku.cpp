@@ -1,5 +1,9 @@
 #include "Sudoku.h"
 
+#include <QDir>
+#include <QFileInfo>
+#include <QStandardPaths>
+
 Sudoku::Sudoku(QObject* parent) :
 	QObject(parent)
 {
@@ -277,7 +281,9 @@ bool Sudoku::check() const
 {
 	const auto [row, col] = findError();
 	if (row == -1 && col == -1) {
-		if (QFile file("base.txt"); file.open(QIODevice::Append)) {
+		const QString path = historyFilePath();
+		QDir().mkpath(QFileInfo(path).path());
+		if (QFile file(path); file.open(QIODevice::Append)) {
 			QString result = "Won with " + QString::number(_open_slots_count) +  " open cells";
 			QTextStream out(&file);
 			out << result << Qt::endl;
@@ -285,6 +291,11 @@ bool Sudoku::check() const
 		return true;
 	}
 	return false;
+}
+
+QString Sudoku::historyFilePath()
+{
+	return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/base.txt";
 }
 
 SudokuBlockModel* Sudoku::blockModel(int index) const {

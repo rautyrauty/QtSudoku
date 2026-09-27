@@ -9,11 +9,14 @@ class TestSudoku : public QObject
 {
 	Q_OBJECT
 private slots:
+	void initTestCase()
+	{
+		QStandardPaths::setTestModeEnabled(true);
+	}
+
 	void init()
 	{
-		QVERIFY(_workdir.isValid());
-		QVERIFY(QDir::setCurrent(_workdir.path()));
-		QFile::remove("base.txt");
+		QFile::remove(Sudoku::historyFilePath());
 	}
 
 	void generateLocksRequestedCount_data()
@@ -154,7 +157,7 @@ private slots:
 		Sudoku sdk;
 		sdk.generate(30);
 		QVERIFY(not sdk.check());
-		QVERIFY(not QFile::exists("base.txt"));
+		QVERIFY(not QFile::exists(Sudoku::historyFilePath()));
 	}
 
 	void checkRecordsVictory()
@@ -164,7 +167,7 @@ private slots:
 		QVERIFY(sdk.solve());
 		QVERIFY(sdk.check());
 
-		QFile file("base.txt");
+		QFile file(Sudoku::historyFilePath());
 		QVERIFY(file.open(QIODevice::ReadOnly | QIODevice::Text));
 		QCOMPARE(QString::fromUtf8(file.readAll()), QString("Won with 30 open cells\n"));
 	}
@@ -176,13 +179,10 @@ private slots:
 		QVERIFY(sdk.check());
 		QVERIFY(sdk.check());
 
-		QFile file("base.txt");
+		QFile file(Sudoku::historyFilePath());
 		QVERIFY(file.open(QIODevice::ReadOnly | QIODevice::Text));
 		QCOMPARE(file.readAll().count('\n'), 2);
 	}
-
-private:
-	QTemporaryDir _workdir;
 };
 
 QTEST_GUILESS_MAIN(TestSudoku)
