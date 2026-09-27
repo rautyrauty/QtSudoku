@@ -63,7 +63,7 @@ jobs:
           ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage
       - uses: actions/upload-artifact@v7
         with:
-          path: '*.AppImage'
+          path: 'QtSudoku-*.AppImage'
           archive: false
           if-no-files-found: error
 
@@ -92,7 +92,7 @@ jobs:
           Compress-Archive -Path $name -DestinationPath "$name.zip"
       - uses: actions/upload-artifact@v7
         with:
-          path: '*.zip'
+          path: 'QtSudoku-*.zip'
           archive: false
           if-no-files-found: error
 
