@@ -1,6 +1,7 @@
 <RCC>
 	<qresource prefix="/">
 		<file>fonts/RussoOne-Regular.ttf</file>
+		<file alias="icons/256-apps-qtsudoku.png">../icons/256-apps-qtsudoku.png</file>
 		<file>qml/MenuBtn.qml</file>
 		<file>qml/Sudoku.qml</file>
 		<file>qml/SudokuCell.qml</file>

@@ -1,6 +1,7 @@
 #include "Sudoku.h"
 
 #include <QGuiApplication>
+#include <QIcon>
 #include <QQmlApplicationEngine>
 
 int main(int argc, char *argv[])
@@ -9,6 +10,8 @@ int main(int argc, char *argv[])
 	QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
 	QGuiApplication app(argc, argv);
+	QGuiApplication::setDesktopFileName(QStringLiteral("qtsudoku"));
+	QGuiApplication::setWindowIcon(QIcon(QStringLiteral(":/icons/256-apps-qtsudoku.png")));
 
 	qmlRegisterType<Sudoku>("SudokuModel", 1, 0, "SudokuModel");
 	qmlRegisterUncreatableType<SudokuBlockModel>("SudokuModel", 1, 0, "SudokuBlockModel", "Created by Sudoku model");
