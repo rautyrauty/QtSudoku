@@ -12,9 +12,21 @@ cmake --build build
 ./build/SudokuApp
 ```
 
-`CMakeLists.txt` uses `GLOB_RECURSE` over `src/*.cpp src/*.h`, so new C++ sources under `src/` are picked up automatically on reconfigure. QML and font resources must be registered in `src/qml.qrc` — they are compiled in via `AUTORCC`.
+`CMakeLists.txt` uses `GLOB_RECURSE` over `src/*.cpp src/*.h`, so new C++ sources under `src/` are picked up automatically on reconfigure. Everything except `src/main.cpp` goes into the `sudoku_core` static library, which both `SudokuApp` and the tests link. QML and font resources must be registered in `src/qml.qrc` — they are compiled in via `AUTORCC`.
 
-No tests, no linters configured.
+## Tests
+
+Qt Test based unit tests live in `tests/` (`tst_cell`, `tst_sudoku`, `tst_blockmodel`, `tst_threads`), built only with `-DBUILD_TESTING=ON`. `CMakePresets.json` has one preset per sanitizer setup:
+
+```bash
+cmake --preset asan-ubsan && cmake --build --preset asan-ubsan && ctest --preset asan-ubsan
+```
+
+Presets: `tests` (no sanitizers), `asan-ubsan`, `lsan`, `tsan`, `valgrind` (memcheck stands in for MSan, which false-positives on the uninstrumented system Qt). Sanitizers are set through the `SUDOKU_SANITIZERS` cache variable (e.g. `address;undefined`), which also turns on `_GLIBCXX_ASSERTIONS`. Sanitizer runtime options are passed to the tests from `tests/CMakeLists.txt`.
+
+`solve()` is a naive randomized backtracker: boards with 10..25 givens can take seconds each, so tests avoid that range.
+
+No linters configured.
 
 ## Architecture
 
