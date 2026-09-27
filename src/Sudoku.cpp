@@ -96,6 +96,7 @@ void Sudoku::generate(int open_slots_count)
 			}
 		}
 	}
+	_open_slots_count = open_slots_count;
 
 	updateBlockModels();
 }

@@ -38,5 +38,5 @@ private:
 	void updateBlockModels() const;
 	std::array<std::unique_ptr<SudokuBlockModel>, 9> _blockModels;
 	std::array<std::array<Cell, 9>, 9> _cells;
-	int _open_slots_count;
+	int _open_slots_count = 0;
 };
