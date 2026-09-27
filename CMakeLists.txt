@@ -33,7 +33,7 @@ set(QRC_FILE src/qml.qrc)
 
 add_executable(SudokuApp src/main.cpp ${QRC_FILE})
 
-target_compile_definitions(SudokuApp PRIVATE QT_QML_DEBUG)
+target_compile_definitions(SudokuApp PRIVATE $<$<CONFIG:Debug>:QT_QML_DEBUG>)
 target_link_libraries(SudokuApp PRIVATE sudoku_core)
 
 target_compile_definitions(SudokuApp PRIVATE QT_QUICK_LIB)
