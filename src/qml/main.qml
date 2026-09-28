@@ -13,6 +13,18 @@ ApplicationWindow {
 	title: qsTr("QtSudoku")
 	id: root
 
+	palette {
+		window: "#2a2e32"
+		windowText: "#ffffff"
+		base: "#373938"
+		text: "#ffffff"
+		button: "#706762"
+		buttonText: "#ffffff"
+		placeholderText: "#a09a96"
+		highlight: "#6bbbb8"
+		highlightedText: "#2a2e32"
+	}
+
 	FontLoader {
 		id: russoFontLoader
 		source: "qrc:/fonts/RussoOne-Regular.ttf"
