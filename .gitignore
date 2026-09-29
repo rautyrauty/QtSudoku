@@ -1,3 +1,5 @@
+*.autosave
+
 # Prerequisites
 *.d
 
@@ -32,3 +34,4 @@
 *.app
 
 *.user
+build/

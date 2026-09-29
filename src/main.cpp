@@ -1,0 +1,29 @@
+#include "Sudoku.h"
+
+#include <QGuiApplication>
+#include <QIcon>
+#include <QQmlApplicationEngine>
+
+int main(int argc, char *argv[])
+{
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
+	QGuiApplication app(argc, argv);
+	QGuiApplication::setApplicationName(QStringLiteral("qtsudoku"));
+	QGuiApplication::setDesktopFileName(QStringLiteral("qtsudoku"));
+	QGuiApplication::setWindowIcon(QIcon(QStringLiteral(":/icons/256-apps-qtsudoku.png")));
+
+	qmlRegisterType<Sudoku>("SudokuModel", 1, 0, "SudokuModel");
+	qmlRegisterUncreatableType<SudokuBlockModel>("SudokuModel", 1, 0, "SudokuBlockModel", "Created by Sudoku model");
+
+	QQmlApplicationEngine engine;
+	const QUrl url(QStringLiteral("qrc:/qml/main.qml"));
+	QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
+	&app, [url](QObject *obj, const QUrl &objUrl) {
+		if (!obj && url == objUrl)
+			QCoreApplication::exit(-1);
+	}, Qt::QueuedConnection);
+	engine.load(url);
+	return app.exec();
+}

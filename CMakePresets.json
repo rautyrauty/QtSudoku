@@ -1,0 +1,53 @@
+{
+	"version": 6,
+	"cmakeMinimumRequired": { "major": 3, "minor": 25, "patch": 0 },
+	"configurePresets": [
+		{
+			"name": "tests",
+			"displayName": "Tests without sanitizers",
+			"binaryDir": "${sourceDir}/build/${presetName}",
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug",
+				"BUILD_TESTING": "ON"
+			}
+		},
+		{
+			"name": "asan-ubsan",
+			"displayName": "AddressSanitizer + LeakSanitizer + UndefinedBehaviorSanitizer",
+			"inherits": "tests",
+			"cacheVariables": { "SUDOKU_SANITIZERS": "address;undefined" }
+		},
+		{
+			"name": "lsan",
+			"displayName": "Standalone LeakSanitizer",
+			"inherits": "tests",
+			"cacheVariables": { "SUDOKU_SANITIZERS": "leak" }
+		},
+		{
+			"name": "tsan",
+			"displayName": "ThreadSanitizer",
+			"inherits": "tests",
+			"cacheVariables": { "SUDOKU_SANITIZERS": "thread" }
+		},
+		{
+			"name": "valgrind",
+			"displayName": "Valgrind memcheck",
+			"inherits": "tests",
+			"cacheVariables": { "SUDOKU_VALGRIND": "ON" }
+		}
+	],
+	"buildPresets": [
+		{ "name": "tests", "configurePreset": "tests" },
+		{ "name": "asan-ubsan", "configurePreset": "asan-ubsan" },
+		{ "name": "lsan", "configurePreset": "lsan" },
+		{ "name": "tsan", "configurePreset": "tsan" },
+		{ "name": "valgrind", "configurePreset": "valgrind" }
+	],
+	"testPresets": [
+		{ "name": "tests", "configurePreset": "tests", "output": { "outputOnFailure": true } },
+		{ "name": "asan-ubsan", "inherits": "tests", "configurePreset": "asan-ubsan" },
+		{ "name": "lsan", "inherits": "tests", "configurePreset": "lsan" },
+		{ "name": "tsan", "inherits": "tests", "configurePreset": "tsan" },
+		{ "name": "valgrind", "inherits": "tests", "configurePreset": "valgrind" }
+	]
+}

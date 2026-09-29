@@ -1,0 +1,122 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  QT_VERSION: '6.8.*'
+
+jobs:
+  linux-tests:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qt6-base-dev qt6-declarative-dev libgl-dev
+      - name: Build and test with ASan and UBSan
+        run: |
+          cmake --preset asan-ubsan
+          cmake --build --preset asan-ubsan --parallel
+          ctest --preset asan-ubsan
+
+  linux-appimage:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          cache: true
+      - name: Install xcb libraries bundled into the AppImage
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgl-dev libxcb-cursor0 libxkbcommon-x11-0 \
+            libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 \
+            libxcb-render-util0 libxcb-shape0 libxcb-xinerama0
+      - name: Build
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+          cmake --build build --parallel
+          DESTDIR="$PWD/AppDir" cmake --install build
+      - name: Package AppImage
+        env:
+          APPIMAGE_EXTRACT_AND_RUN: 1
+          QML_SOURCES_PATHS: ${{ github.workspace }}/src/qml
+          LINUXDEPLOY_OUTPUT_VERSION: ${{ github.ref_type == 'tag' && github.ref_name || github.sha }}
+        run: |
+          base=https://github.com/linuxdeploy
+          wget -q $base/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+          wget -q $base/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+          chmod +x linuxdeploy*.AppImage
+          ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage
+      - uses: actions/upload-artifact@v7
+        with:
+          path: 'QtSudoku-*.AppImage'
+          archive: false
+          if-no-files-found: error
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          arch: win64_msvc2022_64
+          cache: true
+      - name: Build
+        run: |
+          cmake -S . -B build -DBUILD_TESTING=ON
+          cmake --build build --config Release --parallel
+      - name: Test
+        run: ctest --test-dir build -C Release --output-on-failure
+      - name: Package
+        run: |
+          $name = "QtSudoku-${{ github.ref_type == 'tag' && github.ref_name || github.sha }}-windows-x64"
+          New-Item -ItemType Directory $name | Out-Null
+          Copy-Item build\Release\SudokuApp.exe $name\qtsudoku.exe
+          Copy-Item LICENSE $name\
+          windeployqt --release --no-translations --qmldir src\qml $name\qtsudoku.exe
+          Compress-Archive -Path $name -DestinationPath "$name.zip"
+      - uses: actions/upload-artifact@v7
+        with:
+          path: 'QtSudoku-*.zip'
+          archive: false
+          if-no-files-found: error
+
+  release:
+    if: github.ref_type == 'tag'
+    needs: [linux-tests, linux-appimage, windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - name: Check that the tag matches the project version
+        run: |
+          version=$(sed -n 's/^project(SudokuProject VERSION \([0-9.]*\).*/\1/p' CMakeLists.txt)
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match project version $version in CMakeLists.txt"
+            exit 1
+          fi
+      - uses: actions/download-artifact@v8
+        with:
+          path: dist
+          merge-multiple: true
+          skip-decompress: true
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/* --generate-notes --verify-tag
