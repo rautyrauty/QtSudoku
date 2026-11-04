@@ -3,7 +3,7 @@ A Sudoku game built with C++ and Qt 6 Quick, featuring generated puzzles, error 
 
 # Demo
 
-![QtSudoku gameplay demo](screenshots/demo.gif)
+<img src="screenshots/demo.gif" alt="QtSudoku gameplay demo" width="400">
 
 # License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
