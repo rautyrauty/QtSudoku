@@ -1,5 +1,5 @@
 # ![](icons/32-apps-qtsudoku.png "Icon") QtSudoku
-Hi! It's my first project on QML and QtWidgets.
+A Sudoku game built with C++ and Qt 6 Quick, featuring generated puzzles, error hints, keyboard navigation, and a custom dark interface.
 
 # Demo
 
