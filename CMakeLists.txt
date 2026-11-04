@@ -48,6 +48,21 @@ target_link_libraries(SudokuApp PRIVATE sudoku_core)
 
 target_compile_definitions(SudokuApp PRIVATE QT_QUICK_LIB)
 
+add_executable(sudoku_screenshots EXCLUDE_FROM_ALL
+   tools/screenshots.cpp ${QRC_FILE})
+target_link_libraries(sudoku_screenshots PRIVATE sudoku_core)
+set(SUDOKU_MEDIA_PYTHON "" CACHE FILEPATH "Python with Pillow for README animation")
+add_custom_target(screenshots
+   COMMAND ${CMAKE_COMMAND}
+      -DCAPTURE_TOOL=$<TARGET_FILE:sudoku_screenshots>
+      -DSOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}
+      -DPYTHON_EXECUTABLE=${SUDOKU_MEDIA_PYTHON}
+      -P ${CMAKE_CURRENT_SOURCE_DIR}/tools/animation.cmake
+   DEPENDS sudoku_screenshots
+   COMMENT "Updating README animation"
+   VERBATIM
+)
+
 if(BUILD_TESTING)
    enable_testing()
    add_subdirectory(tests)
